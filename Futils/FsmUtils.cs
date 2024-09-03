@@ -70,8 +70,22 @@ namespace Satchel
             return fsm.AddState(new FsmState(fsm.Fsm) { Name = stateName });
         }
 
+        public static bool HasState(this PlayMakerFSM fsm, string stateName)
+        {
+            return fsm.Fsm.GetState(stateName) != null;
+        }
+
         public static FsmState GetState(this PlayMakerFSM fsm, string stateName)
         {
+            return fsm.Fsm.GetState(stateName);
+        }
+
+        public static FsmState GetValidState(this PlayMakerFSM fsm, string stateName)
+        {
+            if (fsm.Fsm.GetState(stateName) == null)
+            {
+                throw new ArgumentException($"FSM \"{fsm.FsmName}\" does not have state \"{stateName}\"");
+            }
             return fsm.Fsm.GetState(stateName);
         }
 
@@ -180,7 +194,7 @@ namespace Satchel
         }
         public static void ChangeTransition(this PlayMakerFSM fsm, string fromStateName, string onEventName, string toStateName)
         {
-            fsm.GetState(fromStateName).ChangeTransition(onEventName, toStateName);
+            fsm.GetValidState(fromStateName).ChangeTransition(onEventName, toStateName);
         }
 
         public static void AddGlobalTransition(this PlayMakerFSM fsm, string onGlobalEventName, string toStateName)
@@ -210,7 +224,7 @@ namespace Satchel
         }
         public static FsmStateAction GetAction(this PlayMakerFSM fsm, string stateName, int index)
         {
-            return fsm.GetState(stateName).GetAction(index);
+            return fsm.GetValidState(stateName).GetAction(index);
         }
         public static T GetAction<T>(this FsmState state, int index) where T : FsmStateAction
         {
@@ -219,7 +233,7 @@ namespace Satchel
 
         public static T GetAction<T>(this PlayMakerFSM fsm, string stateName, int index) where T : FsmStateAction
         {
-            return fsm.GetState(stateName).GetAction<T>(index) as T;
+            return fsm.GetValidState(stateName).GetAction<T>(index) as T;
         }
 
         public static T[] GetActions<T>(this FsmState state) where T : FsmStateAction
@@ -237,7 +251,7 @@ namespace Satchel
         }
         public static T[] GetActions<T>(this PlayMakerFSM fsm, string stateName) where T : FsmStateAction
         {
-            return fsm.GetState(stateName).GetActions<T>();
+            return fsm.GetValidState(stateName).GetActions<T>();
         }
 
         public static T GetFirstActionOfType<T>(this FsmState state) where T : FsmStateAction
@@ -272,7 +286,7 @@ namespace Satchel
         }
         public static void InsertAction(this PlayMakerFSM fsm, string stateName, FsmStateAction action, int index)
         {
-            fsm.GetState(stateName).InsertAction(action, index);
+            fsm.GetValidState(stateName).InsertAction(action, index);
         }
         public static void AddAction(this FsmState state, FsmStateAction action)
         {
@@ -280,7 +294,7 @@ namespace Satchel
         }
         public static void AddAction(this PlayMakerFSM fsm, string stateName, FsmStateAction action)
         {
-            fsm.GetState(stateName).AddAction(action);
+            fsm.GetValidState(stateName).AddAction(action);
         }
         public static void AddFirstAction(this FsmState state, FsmStateAction action)
         {
@@ -288,7 +302,7 @@ namespace Satchel
         }
         public static void AddFirstAction(this PlayMakerFSM fsm, string stateName, FsmStateAction action)
         {
-            fsm.GetState(stateName).AddFirstAction(action);
+            fsm.GetValidState(stateName).AddFirstAction(action);
         }
 
         public static void RemoveAction(this FsmState state, int index)
@@ -307,7 +321,7 @@ namespace Satchel
         }
         public static void RemoveAction(this PlayMakerFSM fsm, string stateName, int index)
         {
-            fsm.GetState(stateName).RemoveAction(index);
+            fsm.GetValidState(stateName).RemoveAction(index);
         }
 
         public static void DisableAction(this FsmState state, int index)
@@ -317,7 +331,7 @@ namespace Satchel
 
         public static void DisableAction(this PlayMakerFSM fsm, string state, int index)
         {
-            fsm.GetState(state).DisableAction(index);
+            fsm.GetValidState(state).DisableAction(index);
         }
 
         public static void AddCustomAction(this FsmState state, Action method)
@@ -326,7 +340,7 @@ namespace Satchel
         }
         public static void AddCustomAction(this PlayMakerFSM fsm, string stateName, Action method)
         {
-            fsm.GetState(stateName).AddAction(new CustomFsmAction() { method = method });
+            fsm.GetValidState(stateName).AddAction(new CustomFsmAction() { method = method });
         }
 
         public static void AddCustomAction(this FsmState state, Action<FsmState> method)
@@ -335,7 +349,7 @@ namespace Satchel
         }
         public static void AddCustomAction(this PlayMakerFSM fsm, string stateName, Action<PlayMakerFSM> method)
         {
-            fsm.GetState(stateName).AddAction(new CustomFsmAction() { method = () => method(fsm) });
+            fsm.GetValidState(stateName).AddAction(new CustomFsmAction() { method = () => method(fsm) });
         }
         public static void InsertCustomAction(this FsmState state, Action method, int index)
         {
@@ -343,7 +357,7 @@ namespace Satchel
         }
         public static void InsertCustomAction(this PlayMakerFSM fsm, string stateName, Action method, int index)
         {
-            fsm.GetState(stateName).InsertAction(new CustomFsmAction() { method = method }, index);
+            fsm.GetValidState(stateName).InsertAction(new CustomFsmAction() { method = method }, index);
         }
         public static void InsertCustomAction(this FsmState state, Action<FsmState> method, int index)
         {
@@ -351,7 +365,7 @@ namespace Satchel
         }
         public static void InsertCustomAction(this PlayMakerFSM fsm, string stateName, Action<PlayMakerFSM> method, int index)
         {
-            fsm.GetState(stateName).InsertAction(new CustomFsmAction() { method = () => method(fsm) }, index);
+            fsm.GetValidState(stateName).InsertAction(new CustomFsmAction() { method = () => method(fsm) }, index);
         }
     }
 

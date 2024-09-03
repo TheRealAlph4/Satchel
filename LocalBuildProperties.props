@@ -1,7 +1,7 @@
 <Project>
-  <PropertyGroup>
-    <VanillaFiles>E:\SteamLibrary\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\</VanillaFiles>
-    <ModdingAPI>$(VanillaFiles)</ModdingAPI>
-    <HollowKnightModsDirectory>$(VanillaFiles)/Mods</HollowKnightModsDirectory>
-  </PropertyGroup>
+	<PropertyGroup>
+		<VanillaFiles>Z:\Games\Hollow Knight\Hollow Knight_Data\Managed\</VanillaFiles>
+		<ModdingAPI>$(VanillaFiles)</ModdingAPI>
+		<HollowKnightModsDirectory>$(VanillaFiles)/Mods</HollowKnightModsDirectory>
+	</PropertyGroup>
 </Project>
